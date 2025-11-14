@@ -9,6 +9,7 @@ DEBUG_MODE = False  # Set to True to enable debug outputs
 
 # ──────────────────────────────────────────────────────────────────────────────────────────
 # ── Config ────────────────────────────────────────────────────────────────────
+# These are just the default values that are used the first time the app runs (or the creds table doesn't exist)
 DEFAULT_MCP_URL = "https://cloud.getdbt.com/api/ai/v1/mcp/" #default
 DEFAULT_TARGET_DATABASE = "ANALYTICS"
 DEFAULT_TARGET_SCHEMA = "PROD"
