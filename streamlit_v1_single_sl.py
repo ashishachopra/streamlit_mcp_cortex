@@ -141,10 +141,33 @@ def _jsonrpc(method: str, params: dict | None = None) -> dict:
     payload = {"jsonrpc": "2.0", "id": str(uuid.uuid4()), "method": method, "params": params or {}}
     r = requests.post(MCP_URL, headers=HEADERS, json=payload, timeout=60)
     r.raise_for_status()
-    out = r.json()
-    if "error" in out:
-        raise RuntimeError(out["error"])
-    return out["result"]
+    
+    # Read the response as text
+    response_text = r.text
+
+    if DEBUG_MODE:
+        with st.expander("Initial response text:"):
+            st.write(response_text)
+
+    # Split into individual events (SSE format uses double newlines)
+    events = response_text.split('\n\n')
+
+    for event in events:
+        if event.strip():
+            lines = event.split('\n')
+            for line in lines:
+                if line.startswith('data: '):
+                    data_content = line[6:]  # Remove 'data: ' prefix
+                    if data_content.strip():
+                        try:
+                            # Parse the JSON data
+                            json_data = json.loads(data_content)
+                            if DEBUG_MODE:
+                                with st.expander("Parsed data:"):
+                                    st.write(json_data)
+                            return json_data.get("result", [])
+                        except json.JSONDecodeError:
+                            st.warn(f"Non-JSON data: {data_content}")
 
 def mcp_call(tool: str, arguments: dict) -> dict:
     result = _jsonrpc("tools/call", {"name": tool, "arguments": arguments})
