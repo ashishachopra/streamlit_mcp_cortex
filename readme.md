@@ -61,8 +61,10 @@ Example workflow for list_metrics (Ie. ‘What are my metrics?’) - workflow wo
 4. Streamlit setup:
     - Create New Streamlit app (under streamlit.public), edit & remove main contents
     - Add requests as a package
+    
         ![image.png](sis_package_config.png)
     - Enable external access integration by clicking on the options (… icon > upper right)
+    
         ![image.png](sis_external_network_config.png)
     - Environment.yml should look something like this
         ```sql
